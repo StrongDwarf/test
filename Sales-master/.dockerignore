@@ -1,0 +1,8 @@
+# Exclude all files
+*/
+
+# Except docker building dependences
+!docker/
+
+# Except project built targets
+!dist/
