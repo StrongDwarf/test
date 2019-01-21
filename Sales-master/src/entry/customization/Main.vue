@@ -3,25 +3,22 @@
    <el-row>
     <el-col :span = '3' class = 'left-nav'>
       <el-menu
-        default-active = '2'
-         class = 'menu'
+        :default-active = 'defaultMenuVal'
+        class = 'menu'
       >
         <el-menu-item
-          index = '0'>
+          index = '1'
+        >
           <i class = 'el-icon-document'></i>
           <router-link to='/analyze'>定制分析表</router-link>
         </el-menu-item>
         <el-menu-item
-          index = '1'>
-          <i class = 'el-icon-document'></i>
-          <router-link to='/entering'>接单率录入</router-link>
-        </el-menu-item>
-        <el-menu-item
-          index = '2'>
+          index = '0'
+        >
           <i class = 'el-icon-setting'></i>
           <router-link to='/customizaion'>配置</router-link>
         </el-menu-item>
-    </el-menu>
+      </el-menu>
     </el-col>
     <el-col :span = '21' class = 'main'>
       <keep-alive>
@@ -35,7 +32,12 @@
 export default {
   data () {
     return {
+      defaultMenuVal: '0'
     }
+  },
+  updated () {
+    let index = this.$router.history.current.name === 'analyze' ? '1' : '0'
+    if (index !== this.defaultMenuVal) this.defaultMenuVal = index
   },
   methods: {
   }

@@ -32,10 +32,7 @@ export default {
   methods: {
     initEcharts () {
       let myEcharts = echarts.init(document.getElementById('echartsPersonal'))
-      console.log("this.personalEchartOptions",this.personalEchartOptions)
-      if(this.personalEchartOptions){
-        myEcharts.setOption(this.personalEchartOptions)
-      }
+      myEcharts.setOption(this.personalEchartOptions)
     }
   }
 }

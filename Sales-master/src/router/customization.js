@@ -3,11 +3,6 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-/**
- * 测试路径
- * http://localhost:8080/customization.html#/
- */
-
 export default new Router({
   routes: [
     {
@@ -23,10 +18,6 @@ export default new Router({
       path: '/analyze',
       name: 'analyze',
       component: () => import('@/entry/customization/views/FormEcharts.vue')
-    },
-    {
-      path: '/entering',
-      component: () => import('@/entry/customization/views/EnteringReceipt.vue')
     }
   ]
 })

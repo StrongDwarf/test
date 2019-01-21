@@ -17,12 +17,6 @@ export default {
     index: {
       default: 0,
       type: Number
-    },
-    dataSelectType:{
-      type:Number
-    },
-    dataValue:{
-      type:Array
     }
   },
   data () {
@@ -38,22 +32,6 @@ export default {
     index (newVal, oldVal) {
       if (newVal !== oldVal) {
         this.getData()
-      }
-    },
-    dataSelectType(newVal,oldVal){
-      if(newVal !== oldVal){
-        if(this.dataValue && this.dataValue.length ==2){
-          this.getDataA()
-        }else{
-          return
-        }
-      }
-    },
-    dataValue(newVal,oldVal){
-      if(newVal !== oldVal){
-        if(newVal.length == 2){
-          this.getDataA();
-        }
       }
     }
   },
@@ -76,33 +54,6 @@ export default {
           if (!data) return null
           this.noData = false
           let options = formatChannelSnapshot(data)
-          this.initEcharts(options)
-        })
-    },
-    getDataA(){
-      const _this = this;
-      this.loading = true
-      // 渠道
-      /*console.log("渠道请求",{
-          dataType:_this.dataSelectType,
-          year:_this.dataValue[0],
-          value:_this.dataValue[1]
-        })
-        */
-      API.getChannelSnapshotQuery(
-        {
-          dataType:_this.dataSelectType,
-          year:_this.dataValue[0],
-          value:_this.dataValue[1]
-        }
-      )
-        .then(data => {
-          //console.log("渠道返回数据",data.datalist);
-          let dataA = data.datalist;
-          this.loading = false
-          if (!dataA) return null
-          this.noData = false
-          let options = formatChannelSnapshot(dataA)
           this.initEcharts(options)
         })
     }

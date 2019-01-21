@@ -13,16 +13,6 @@
     >
     </el-table-column>
     <el-table-column
-      prop="receive_count"
-      label="接单数"
-    >
-    </el-table-column>
-    <el-table-column
-      prop="lost_count"
-      label="丢单数"
-    >
-    </el-table-column>
-    <el-table-column
       prop="standard_quantity"
       label="标品成单数"
     >
@@ -58,26 +48,15 @@
     >
     </el-table-column>
     <el-table-column
-      prop="receive_rate"
-      label="成单率(%)"
-    >
-    </el-table-column>
-    <el-table-column
       prop="total_sales"
       label="总销售额"
     >
     </el-table-column>
-    <!-- 
-    <el-table-column
-      prop="total_quantity"
-      label="总成单数"
-    >
-    </el-table-column>
-    -->
     <el-table-column
       prop="average_profit"
       label="人均预估毛利"
       v-if = 'index === 1'
+      label-class-name = 'red'
     >
     </el-table-column>
    </el-table>

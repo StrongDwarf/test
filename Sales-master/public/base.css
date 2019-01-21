@@ -1,0 +1,81 @@
+/* ========== notice ========== */
+.notice {
+  margin-top: 14px;
+  float: right;
+  margin-left: -36px;
+}
+
+.notice .seeAll {
+  line-height: 30px;
+  color: #2d8cf0;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.notice .list {
+  padding: 10px 20px;
+  overflow: hidden;
+}
+
+.notice .list .item .content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.notice .list .item .title {
+  width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notice .option {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  overflow: hidden;
+  list-style: none;
+}
+
+.notice .option li {
+  height: 30px;
+  width: 33%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.notice .option .act {
+  border-bottom: 3px solid #f96a6a;
+  color: #f96a6a;
+  font-weight: bold;
+}
+
+.notice .noticeBtn {
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+}
+
+.notice .noticeBtn .nums {
+  color: #f96a6a;
+}
+
+.notice-list-box {
+  height: 310px;
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+}
+
+.notice-list-box li {
+  line-height: 30px;
+  border-bottom: 1px dotted #ccc;
+}
+
+.notice-list-box>div {
+  border-bottom: 1px dotted #ccc;
+  line-height: 30px;
+}
+/* ========== notice ========== */

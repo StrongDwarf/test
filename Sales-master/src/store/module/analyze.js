@@ -22,7 +22,6 @@ function addAllColumn (data) {
   Object.keys(data[0]).forEach(val => {
     let result = 0
     for (let key in data) {
-      if (val === 'name') continue
       result += Number(data[key][val])
     }
     all.name = '汇总'
@@ -32,6 +31,7 @@ function addAllColumn (data) {
     all[val] = result
   })
   let newData = JSON.parse(JSON.stringify(data))
+
   newData.push(all)
   return newData
 }
@@ -54,7 +54,7 @@ const state = {
 
 const getters = {
   personalEchartOptions () {
-    if (state.personalData.length === 0) return formatPersonalSnapshot([])
+    if (state.personalData.length === 0) return
     let options = formatPersonalSnapshot(state.personalData)
     return options
   },

@@ -18,7 +18,7 @@ function fullOptons (title, tooltip, xAxis, yAxis, series) {
 }
 
 function xAxisStructure (options = {}) {
-  let { showAllLabel } = options
+  let { showAllLabel, rotate } = options
   let xAxis = [
     {
       type: 'category',
@@ -28,7 +28,9 @@ function xAxisStructure (options = {}) {
   if (showAllLabel) {
     xAxis[0].axisLabel = {
       interval: 0,
-      rotate: -30
+      rotate: rotate || -30,
+      showMaxLabel: true,
+      showMinLabel: true
     }
   }
   return xAxis
@@ -87,7 +89,8 @@ function commonTooltip (datas, type = 'sales') {
 
 export const formatChannelSnapshot = (data) => {
   let xAxis = xAxisStructure({
-    showAllLabel: true
+    showAllLabel: true,
+    rotate: -20
   })
 
   let yAxis = [
@@ -124,6 +127,16 @@ export const formatChannelSnapshot = (data) => {
 
   let options = fullOptons(title, tooltip, xAxis, yAxis, seriesSales)
   return options
+}
+
+export const emptyOptions = {
+  legend: {
+    data: []
+  },
+  series: [],
+  xAxis: [],
+  yAxis: [],
+  title: {}
 }
 
 export const formatPersonalSnapshot = (data) => {
@@ -168,6 +181,10 @@ export const formatPersonalSnapshot = (data) => {
     seriesOrders[1].data.push(item.customize_quantity)
     // seriesOrders[2].data.push(item.total_quantity)
   })
+  // console.log(xAxis[0].data)
+  // for (let i = 0; i <= 30; i++) {
+  //   xAxis[0].data.push(`测试${i}`)
+  // }
 
   let series = seriesSales.concat(seriesOrders)
 

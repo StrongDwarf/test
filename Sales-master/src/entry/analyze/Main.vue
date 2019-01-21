@@ -1,23 +1,19 @@
 <template>
  <div class = 'box'>
+   <Headers />
    <el-row>
     <el-col :span = '3' class = 'left-nav'>
       <el-menu
-        default-active = '0'
-         class = 'menu'
+        default-active = '1'
+        class = 'menu'
       >
         <el-menu-item
-          index = '0'>
+          index = '1'
+        >
           <i class = 'el-icon-document'></i>
           <router-link to='/analyze'>定制分析表</router-link>
         </el-menu-item>
-        <el-menu-item
-          index = '1'>
-          <i class = 'el-icon-document'></i>
-          <router-link to='/entering'>接单率录入</router-link>
-        </el-menu-item>
-        
-    </el-menu>
+      </el-menu>
     </el-col>
     <el-col :span = '21' class = 'main'>
       <keep-alive>
@@ -28,7 +24,12 @@
  </div>
 </template>
 <script>
+import Headers from '@/components/common/Headers'
+
 export default {
+  components: {
+    Headers
+  },
   data () {
     return {
     }

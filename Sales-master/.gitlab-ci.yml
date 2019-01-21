@@ -1,82 +1,93 @@
 stages:
-  - lint
-  - test
-  - build
-  - package
-  - deploy
+  - 评审
+  - 构建
+  - 测试
+  - 发布
+  - 部署
 
-lint:
-  stage: lint
-  except:
-    - master
-  cache:
+.node: &node
+  cache: &node_cache
+    key: $CI_COMMIT_REF_SLUG
     paths:
-      - "node_modules/"
-  image: node:lts-alpine
-  before_script:
-    - "install -m 0600 /dev/null $HOME/.npmrc"
-    - "echo \"//$NPM_REGISTRY/:_authToken=\\\"$NPM_AUTH_TOKEN\\\"\" > $HOME/.npmrc"
-    - "npm config set registry https://$NPM_REGISTRY"
-  script:
-    - "npm install"
-    - "npm run lint"
+      - node_modules/
+  image: node:alpine
+  retry:
+    max: 2
+    when:
+      - stuck_or_timeout_failure
 
-build:
-  stage: build
-  only:
-    - master
-  artifacts:
-    name: "$CI_COMMIT_TAG"
-    paths:
-      - "dist/"
-  cache:
-    paths:
-      - "node_modules/"
-    policy: pull
-  image: node:lts-alpine
-  before_script:
-    - "install -m 0600 /dev/null $HOME/.npmrc"
-    - "echo \"//$NPM_REGISTRY/:_authToken=\\\"$NPM_AUTH_TOKEN\\\"\" > $HOME/.npmrc"
-    - "npm config set registry https://$NPM_REGISTRY"
-  script:
-    - "npm install"
-    - "npm run build"
-
-package:
-  stage: package
-  only:
-    - master
-  dependencies:
-    - build
+.docker: &docker
   image: docker
   services:
     - docker:dind
   variables:
     DOCKER_DRIVER: overlay2
+    DOCKER_HOST: "tcp://localhost:2375"
+  retry:
+    max: 2
+    when:
+      - stuck_or_timeout_failure
   before_script:
-    - "echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY"
-  script:
-    - "docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA ."
-    - "docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
-    - "[ -n \"$CI_COMMIT_TAG\" ] && docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
-    - "[ -n \"$CI_COMMIT_TAG\" ] && docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
-    - "docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest"
-    - "docker push $CI_REGISTRY_IMAGE:latest"
-    - "docker image prune -af"
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
 
-deploy:
-  stage: deploy
-  only:
-    - tags
-  except:
-    - branches
-  dependencies:
-    - build
-  environment:
-    name: production
-  when: manual
+.alpine: &alpine
+  dependencies: []
   image: alpine
+  variables:
+    GIT_STRATEGY: none
+  retry:
+    max: 2
+    when:
+      - stuck_or_timeout_failure
+
+编码质量评审:
+  <<: *node
+  stage: 评审
+  except:
+    - master
+  allow_failure: true
   script:
-    - "echo \"deploy to production ...\""
-  after_script:
-    - "rm -fr dist/"
+    - npm install
+    - npm run lint
+
+构建:
+  <<: *node
+  stage: 构建
+  artifacts:
+    name: $CI_COMMIT_SHA
+    paths:
+      - dist/
+  script:
+    - "[ -d \"node_modules\" ] || npm install"
+    - npm run build
+
+发布docker镜像:
+  <<: *docker
+  stage: 发布
+  only:
+    - master
+  dependencies:
+    - 构建
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:stable .
+    - docker push $CI_REGISTRY_IMAGE:stable
+    - "[ -n \"$CI_COMMIT_TAG\" ] && docker tag $CI_REGISTRY_IMAGE:stable $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG && docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG || true"
+
+发布临时docker镜像:
+  <<: *docker
+  stage: 发布
+  except:
+    - master
+  dependencies:
+    - 构建
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+部署测试环境:
+  <<: *alpine
+  stage: 部署
+  except:
+    - master
+  script:
+    - echo "Comming..."

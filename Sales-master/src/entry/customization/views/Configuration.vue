@@ -51,7 +51,7 @@ export default {
       choosed_department_names: ''
     }
   },
-  created () {
+  mounted () {
     API.getDepartmentTree()
       .then(data => {
         if (!data) return
@@ -91,24 +91,32 @@ export default {
     gatherCheckedNames () {
       let $tree = this.$refs.tree
       let checkedNames = ''
-      let $checkedNodes = $tree.getCheckedNodes()
+      // TODO getCheckedNodes 原生方法有bug
+      $tree.getCheckedNodes(false, false).forEach(item => {
+        checkedNames += item.name + '、'
+      })
+      console.log(checkedNames)
       // 深度递归
-      function nextChildren (datas, number) {
-        for (let i = 0; i < datas.length; i++) {
-          let target = datas[i]
-          if (target.children.length > 0) {
-            checkedNames += target.name + '：'
-            nextChildren(target.children)
-            // 跳出最外层的循环
-            if (number) break
-          } else {
-            if (i === datas.length - 1) {
-              checkedNames += target.name + '<br/>'
-            } else checkedNames += target.name + '，'
-          }
-        }
-      }
-      nextChildren($checkedNodes, 1)
+      // function nextChildren (datas, number) {
+      //   for (let i = 0; i <= datas.length - 1; i++) {
+      //     let target = datas[i]
+      //     if (target.children.length > 0) {
+      //       checkedNames += target.name + '：'
+      //       nextChildren(target.children)
+      //       // 跳出最外层的循环
+      //       if (number) {
+      //         break
+      //       }
+      //     } else {
+      //       if (i === datas.length - 1) {
+      //         checkedNames += target.name + '<br/>'
+      //         console.log(checkedNames, datas)
+      //       } else checkedNames += target.name + '，'
+      //     }
+      //   }
+      // }
+      // nextChildren($checkedNodes, 1)
+      // console.log(checkedNames)
       return checkedNames
     },
     initCheckedNames (data) {
